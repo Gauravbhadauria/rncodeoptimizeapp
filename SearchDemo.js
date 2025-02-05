@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {
   View,
   TextInput,
@@ -7,25 +7,24 @@ import {
   ActivityIndicator,
   SafeAreaView,
 } from 'react-native';
-import {debounce} from 'lodash';
 import axios from 'axios';
+import {debounce} from 'lodash';
 
 const SearchUsers = () => {
   const [query, setQuery] = useState('');
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Function to fetch users from API
-  const fetchUsers = async (searchQuery: string) => {
-    if (!searchQuery) {
+  const fetchUsers = async text => {
+    if (!text) {
       setUsers([]);
       return;
     }
+    console.log('fetch data');
     setLoading(true);
-    console.log('fetchmore');
     try {
       const response = await axios.get(
-        `https://jsonplaceholder.typicode.com/users?name_like=${searchQuery}`,
+        `https://jsonplaceholder.typicode.com/users?name_like=${text}`,
       );
       setUsers(response.data);
     } catch (error) {
@@ -35,16 +34,14 @@ const SearchUsers = () => {
     }
   };
 
-  // ✅ Debounce function defined inside `useMemo` so it's created only once
   const debouncedFetchUsers = useMemo(() => debounce(fetchUsers, 500), []);
 
-  // ✅ useCallback to avoid re-creating the function on each render
   const handleSearch = useCallback(
-    (text: string) => {
+    async text => {
       setQuery(text);
       debouncedFetchUsers(text);
     },
-    [debouncedFetchUsers], // Make sure it uses the memoized debounce function
+    [debouncedFetchUsers],
   );
 
   return (
