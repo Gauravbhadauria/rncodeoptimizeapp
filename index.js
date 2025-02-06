@@ -7,5 +7,6 @@ import App from './App';
 import {name as appName} from './app.json';
 
 import RnBestPracises from './RnBestPracises';
+import ResponsiveUiDemo from './ResponsiveUiDemo';
 
-AppRegistry.registerComponent(appName, () => RnBestPracises);
+AppRegistry.registerComponent(appName, () => ResponsiveUiDemo);
